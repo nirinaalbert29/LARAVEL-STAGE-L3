@@ -16,6 +16,11 @@
     <link rel="shortcut icon" href="./logo_open.jpg" type="image/x-icon">
 <!-- Custom styles -->
 <link rel="stylesheet" href="./css/style.min.css">
+<style>
+    body {
+            background: linear-gradient(100deg, #34204e, #880260, #1e1d2c);
+        }
+</style>
 </head>
 <body>
     @if (session()->has('erroremail'))
@@ -29,24 +34,32 @@
         @endif
         <div class="layer"></div>
 <main class="page-center">
-  <article class="sign-up">
-    <h1 class="sign-up__title">Mot de passe oublié</h1>
-    <form class="sign-up-form form" action="/mdpoublie" method="POST">
-        @csrf
-        <div class="d-flex justify-content-center">
-            <img src="/logo_open.jpg" class="rounded-circle"
-                    alt="logo" srcset="" width="100">
+    <div class="row">
+        <div class="col-4">
+        <img src="/mot-passe-oublie.avif" alt="" style="width: 100%">
         </div>
-        <div class="form-group">
-            <label for="password">Saisir Votre Email:</label>
-            <div class="input-group">
-                <input type="email" class="form-control form-input" placeholder="Saisir mot email..." name="mail" required>
-              </div>
+        <div class="col-6">
+            <article class="sign-up">
+
+                <form class="sign-up-form form" action="/mdpoublie" method="POST">
+                    @csrf
+                    <div class="d-flex justify-content-center">
+                        <img src="/logo_open.jpg" class="rounded-circle"
+                                alt="logo" srcset="" width="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Saisir Votre Email:</label>
+                        <div class="input-group">
+                            <input type="email" class="form-control form-input" placeholder="Saisir mot email..." name="mail" required>
+                        </div>
+                    </div>
+                <button class="form-btn primary-default-btn transparent-btn">Valider</button><br>
+                <a href="/"> <p> << Retour au Login.. </p></a>
+                </form>
+            </article>
         </div>
-      <button class="form-btn primary-default-btn transparent-btn">Valider</button><br>
-      <a href="/"> <p> << Retour au Login.. </p></a>
-    </form>
-  </article>
+    </div>
 </main>
 </body>
 </html>

@@ -11,7 +11,8 @@ class IntervenantController extends Controller
     function index(){
         $intervenants=Intervenant::get();
         $intervenant = session('intervenant'); // Récupérer l'intervenant à partir de la session
-        return view('intervenant.intervenatListe',['intervenants'=>$intervenants,'intervenant'=>$intervenant]);
+        $admin = session('admin');
+        return view('intervenant.intervenatListe',['intervenants'=>$intervenants,'intervenant'=>$intervenant,'admin'=>$admin]);
     }
     function affiche(){
         return view('intervenant.intervenantForm');

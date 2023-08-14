@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        // Ajoutez cette configuration pour le guard 'admin'
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -65,8 +70,14 @@ return [
             'model' => App\Models\User::class,
         ],
 
+        // Ajoutez cette configuration pour le provider 'admins'
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
         // 'users' => [
-        //     'driver' => 'database',
+        //     'driver' => 'database',x
         //     'table' => 'users',
         // ],
     ],

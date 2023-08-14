@@ -93,6 +93,17 @@ class compteController extends Controller
         else{
             return back()->with('erroremail', "Votre addresse Email est incorrect,Veuillez  verifier S'il Vous Plaît!");
         }
-
+    }
+    public function changemdp(){
+        $intervenant = session('intervenant');
+        $id=$intervenant->first()->id;
+        $compte=Compte::where('intervenants_id',$id)->first();
+        return view('compte.changemdp_inter',['intervenant'=>$intervenant,'compte'=>$compte]);
+    }
+    public function update_mdp_inter($id,Request $request){
+        $compte=Compte::where('intervenants_id',$id)->where('mdp',$request->mdp_actuel)->first();
+        $compte->mdp=$request->mdp_i;
+        $compte->save();
+        return back()->with('successmodifCompte',"La modification de compte de l'intervenant est réussite");
     }
 }

@@ -9,11 +9,9 @@ class actionController extends Controller
 {
     public function index(){
         $actions=Action::get();
+        $admin = session('admin');
         $intervenant = session('intervenant'); // Récupérer l'intervenant à partir de la session
-        return view('action.actionListe',['actions'=>$actions,'intervenant'=>$intervenant]);
-    }
-    public function form(){
-        return view('action.actionForm');
+        return view('action.actionListe',['actions'=>$actions,'intervenant'=>$intervenant,'admin'=>$admin]);
     }
     public function store(Request $request){
         $action=new Action;

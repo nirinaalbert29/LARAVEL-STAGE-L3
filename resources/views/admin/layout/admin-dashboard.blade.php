@@ -102,6 +102,15 @@
 
 </head>
 <body>
+    @if (session()->has('successadminModif'))
+            <script>
+                Swal.fire(
+                'Succès !',
+                '{{session('successadminModif')}}',
+                'success'
+                )
+            </script>
+    @endif
   <div class="layer"></div>
 <!-- ! Body -->
 <a class="skip-link sr-only" href="#skip-target">Skip to content</a>
@@ -226,7 +235,15 @@
             </span>
             </button>
         <ul class="users-item-dropdown nav-user-dropdown dropdown">
-          <li><a class="danger" href="/login-admin">
+            <li><a href="##">
+                <i data-feather="settings" aria-hidden="true"></i>
+                <span data-toggle="modal" data-target="#myModalAjout1">Modifier profil</span>
+              </a></li>
+              <li><a href="changemdp-admin">
+                <i data-feather="settings" aria-hidden="true"></i>
+                <span>Change mdp</span>
+              </a></li>
+          <li><a class="danger" href="/deconnect">
               <i data-feather="log-out" aria-hidden="true"></i>
               <span>Déconnecter</span>
             </a></li>
@@ -256,6 +273,49 @@
         </div>
     </footer>
   </div>
+</div>
+
+
+
+
+<div class="modal fade" id="myModalAjout1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- En-tête de la fenêtre modale -->
+            <div class="modal-header"><br>
+                <h5 class="modal-title">Profil de l'Administrateur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Contenu de la fenêtre modale -->
+            <div class="modal-body">
+                <form action="/admin-update/{{$admin->id}}" class="was-validated" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('put')
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="profile-image-container">
+                                <img src="logo_open.jpg"  class="profile-image" alt="Photo de profil" width="200px">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nom">Nom Admin:</label>
+                            <input type="text" class="form-control form-input" placeholder="Saisir le nom de l'admin" value="{{$admin->nom_admin}}" name="nom_a" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Admin:</label>
+                            <input type="email" class="form-control form-input" placeholder="Saisir l'email de l'admin" value="{{$admin->email_admin}}" name="email_a" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                        <button type="submit" class="btn btn-primary save-btn">Modifier</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Chart library -->
 <script src="./plugins/chart.min.js"></script>

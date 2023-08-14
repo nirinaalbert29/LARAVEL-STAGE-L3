@@ -47,8 +47,8 @@
           border-radius: 50%;
           overflow: hidden;
         }
-      </style>
-    <style>
+
+
         .input-group-text {
             cursor: pointer;
         }
@@ -64,16 +64,13 @@
         .form-control:focus + .input-group-append .input-group-text i {
             color: #495057;
         }
-    </style>
-    <style>
+
         body {
-            /* Utilisez la fonction d'aide asset pour obtenir le chemin complet de l'image */
-            background-image: url("{{ asset('iconlog.jpg') }}");
-            /* Réglez les autres propriétés CSS pour la mise en page selon vos besoins */
-            background-size: cover;
-            background-repeat: no-repeat;
-            /* Vous pouvez également définir la hauteur et la largeur de la section si nécessaire */
-            height: 100vh;
+            background: linear-gradient(100deg, #2e1322, #531f34, #bb2e72);
+        }
+        #divimg{
+            background: linear-gradient(100deg, #e84393,#413e58, #2e1322);
+            color: #f8f9fa;
         }
     </style>
     <link rel="shortcut icon" href="./logo_open.jpg" type="image/x-icon">
@@ -90,17 +87,26 @@
                 )
             </script>
         @endif
+        @if (session()->has('errorCreate'))
+            <script>
+                Swal.fire(
+                'Un erreur survenu!',
+                '{{session('errorCreate')}}',
+                'error'
+                )
+            </script>
+        @endif
 
     <div class="layer"></div>
 <main class="page-center">
   <article class="sign-up">
-    <form class="sign-up-form form" action="/create-admin" method="post">
+    <form class="sign-up-form form" action="/create-admin" method="post" id="divimg">
         @csrf
         <div class="d-flex justify-content-center">
             <img src="/logo_open.jpg" class="rounded-circle"
                     alt="logo" srcset="" width="100">
         </div>
-        <h3 class="text-primary mb-4">Créer Nouveau Compte</h3>
+        <h3 class="text-white mb-4">Création Nouveau Compte</h3>
             <div class="form-group">
                 <label for="nom">Nom Admin</label>
                 <input type="text" class="form-control form-input" placeholder="Saisir nom_admin" name="nom_admin" required>

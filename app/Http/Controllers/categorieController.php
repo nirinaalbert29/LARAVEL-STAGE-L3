@@ -11,8 +11,9 @@ class categorieController extends Controller
 {
     public function form(){
         $categories=Categorie::all();
+        $admin = session('admin');
         $intervenant = session('intervenant'); // Récupérer l'intervenant à partir de la session
-        return view('categorie.categorie',['categories'=>$categories,'intervenant'=>$intervenant]);
+        return view('categorie.categorie',['categories'=>$categories,'intervenant'=>$intervenant,'admin'=>$admin]);
     }
     public function store(Request $request){
         $categorie=new Categorie;

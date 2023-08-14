@@ -1083,8 +1083,9 @@ class statistiqueController extends Controller
 
         //TEMPS INTERFICHIER
         $sumInterfileTimes = Ticket::sumInterfichierTempsMensuelGlobal($startOfMonth,$endOfMonth);
-
+        $admin = session('admin');
             return view('statistique.statglobalAjourd', [
+                'admin'=>$admin,
                 'nb_prod' => $nb_prod,
                 'delai_prod' => $delai_prodF,
                 'pourcprod' => $pourcprod,

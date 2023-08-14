@@ -29,23 +29,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/intervenants', [IntervenantController::class, 'index']);
-Route::post('/intervenant-ajout', [IntervenantController::class, 'ajout']);
-Route::post('/intervenant-ajout-login', [IntervenantController::class, 'ajout_login']);
-Route::put('/intervenant-update/{id}', [IntervenantController::class, 'update']);
 
-Route::put('/intervenant-update-compte/{id}', [IntervenantController::class, 'updatecompte']);
-Route::get('/intervenant-delete/{id}',[IntervenantController::class,'supprimer']);
-// Route::get('/intervenants/{id}/photo', [IntervenantController::class, 'showPhoto'])->name('intervenants.photo');
-Route::get('/action-liste',[actionController::class,'index']);
-Route::post('/action-ajout',[actionController::class,'store']);
-Route::put('/action-update/{id}', [actionController::class, 'update']);
-Route::get('/action-delete/{id}',[actionController::class,'supprimer']);
 
-Route::get('/categorie',[categorieController::class,'form']);
-Route::post('/categorie-ajout',[categorieController::class,'store']);
-Route::put('/categorie-update/{id}', [categorieController::class, 'update']);
-Route::get('/categorie-delete/{id}',[categorieController::class,'supprimer']);
+
 
 Route::get('/newcompte',[compteController::class,'index']);
 Route::post('/compte-create',[compteController::class,'create']);
@@ -87,8 +73,7 @@ Route::post('/stathebdo',[statistiqueController::class,'stathebdo']);
 Route::get('/stathebdoAjourd',[statistiqueController::class,'hebdoAujourd']);
 Route::get('/statglobalAjourd',[statistiqueController::class,'globalAujourd']);
 
-Route::get('/export',[exportController::class,'index']);
-Route::post('/export',[exportController::class,'export']);
+
 
 //Email
 Route::get('/envoyer', [MessageController::class, 'create'])->name('envoyer.form');
@@ -97,8 +82,6 @@ Route::post('/envoyer', [MessageController::class, 'send'])->name('envoyer.messa
 //test elemt
 Route::get('/test',[testController::class,'index']);
 
-//import categ
-Route::post('categorie/import', [categorieController::class,'importExcel'])->name('categorie.import');
 
 Route::get('/dash-admin', [adminController::class, 'dash']);
 Route::get('/login-admin', [adminController::class, 'indexlogin']);
@@ -108,9 +91,47 @@ Route::post('/create-admin', [adminController::class, 'create']);
 Route::get('/mdpoublie-admin',[adminController::class,'mdpindex']);
 Route::post('/mdpoublie-admin', [adminController::class, 'oublie']);
 
-Route::get('/principale-admin', [adminController::class, 'menu']);
-Route::get('/stathebdo-admin',[adminController::class,'hebdo']);
-Route::post('/stathebdo-admin',[adminController::class,'stathebdo']);
 
-Route::get('/statmensuel-admin',[adminController::class,'index']);
-Route::post('/statmensuel-admin',[adminController::class,'statmensuel']);
+Route::get('/change-mdp-inter',[compteController::class,'changemdp']);
+Route::put('changemdp-inter/{id}', [compteController::class, 'update_mdp_inter']);
+
+
+
+Route::get('deconnect', [adminController::class,'deconnect']);
+
+
+Route::put('/intervenant-update-compte/{id}', [IntervenantController::class, 'updatecompte']);
+Route::middleware(['web', 'admin.auth'])->group(function () {
+    // Routes protégées ici
+    Route::get('/export',[exportController::class,'index']);
+    Route::post('/export',[exportController::class,'export']);
+    Route::get('/changemdp-admin',[adminController::class,'changemdp']);
+    Route::put('changemdp-admin/{id}', [adminController::class, 'update_mdp']);
+    Route::put('/admin-update/{id}', [adminController::class, 'update_admin']);
+    Route::get('/intervenants', [IntervenantController::class, 'index']);
+    Route::post('/intervenant-ajout', [IntervenantController::class, 'ajout']);
+    Route::post('/intervenant-ajout-login', [IntervenantController::class, 'ajout_login']);
+    Route::put('/intervenant-update/{id}', [IntervenantController::class, 'update']);
+    Route::get('/principale-admin', [adminController::class, 'menu']);
+    Route::get('/stathebdo-admin',[adminController::class,'hebdo']);
+    Route::post('/stathebdo-admin',[adminController::class,'stathebdo']);
+
+    Route::get('/statmensuel-admin',[adminController::class,'index']);
+    Route::post('/statmensuel-admin',[adminController::class,'statmensuel']);
+
+    //import categ
+    Route::post('categorie/import', [categorieController::class,'importExcel'])->name('categorie.import');
+    Route::get('/intervenant-delete/{id}',[IntervenantController::class,'supprimer']);
+    // Route::get('/intervenants/{id}/photo', [IntervenantController::class, 'showPhoto'])->name('intervenants.photo');
+    Route::get('/action-liste',[actionController::class,'index']);
+    Route::post('/action-ajout',[actionController::class,'store']);
+    Route::put('/action-update/{id}', [actionController::class, 'update']);
+    Route::get('/action-delete/{id}',[actionController::class,'supprimer']);
+
+    Route::get('/categorie',[categorieController::class,'form']);
+    Route::post('/categorie-ajout',[categorieController::class,'store']);
+    Route::put('/categorie-update/{id}', [categorieController::class, 'update']);
+    Route::get('/categorie-delete/{id}',[categorieController::class,'supprimer']);
+});
+
+

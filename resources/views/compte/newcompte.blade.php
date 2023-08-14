@@ -68,6 +68,11 @@
     <link rel="shortcut icon" href="./logo_open.jpg" type="image/x-icon">
 <!-- Custom styles -->
 <link rel="stylesheet" href="./css/style.min.css">
+<style>
+    body {
+            background: linear-gradient(100deg, #34204e, #880260, #1e1d2c);
+        }
+</style>
 </head>
 <body>
     @if (session()->has('successCreate'))
@@ -157,7 +162,7 @@
             if (password1 !== password2) {
                 Swal.fire(
                     'Erreur',
-                    'Les mots de passe ne correspondent pas.',
+                    'Les mots de passe ne correspondent pas, Ils doivent identique',
                     'error'
                 );
             } else {

@@ -12,8 +12,9 @@ use Illuminate\Http\Request;
 class exportController extends Controller
 {
     public function index(){
+        $admin = session('admin');
         $intervenant = Intervenant::all();
-        return view('export.export',['intervenant'=>$intervenant]);
+        return view('export.export',['intervenant'=>$intervenant,'admin'=>$admin]);
     }
     public function export(Request $request){
             $id=$request->inter;
@@ -79,15 +80,18 @@ class exportController extends Controller
             return redirect('/export')->with('vide',"Aucune ticket de cet Mois");
         }
         else{
+            $admin = session('admin');
             $maxTicketNum = Ticket::where('intervenants_id', $id)
                     ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-                    ->max('num_tic');
-            return view('export.export',['tickets'=>$tickets,
-            'pauses'=>$pauses,
-            'nb_ticket_tot'=>$maxTicketNum,
-            'nom_inter'=>$nom_inter,
-            'startOfMonth'=>$moisAnnee,
-            'intervenant'=>$intervenant
+                    ->max('num_tic'); 
+            return view('export.export',[
+                'admin'=>$admin,
+                'tickets'=>$tickets,
+                'pauses'=>$pauses,
+                'nb_ticket_tot'=>$maxTicketNum,
+                'nom_inter'=>$nom_inter,
+                'startOfMonth'=>$moisAnnee,
+                'intervenant'=>$intervenant
         ]);
         }
     }

@@ -240,10 +240,14 @@
         @endforeach
         @endif
         <ul class="users-item-dropdown nav-user-dropdown dropdown">
-          <li><a href="##">
+          <li><a href="#">
               <i data-feather="settings" aria-hidden="true"></i>
               <span data-toggle="modal" data-target="#myModalAjout1">Modifier profil</span>
             </a></li>
+            <li><a href="/change-mdp-inter">
+                <i data-feather="settings" aria-hidden="true"></i>
+                <span>change mdp</span>
+              </a></li>
           <li><a class="danger" href="/">
               <i data-feather="log-out" aria-hidden="true"></i>
               <span>Déconnecter</span>

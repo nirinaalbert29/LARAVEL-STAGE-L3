@@ -10,18 +10,21 @@ use Carbon\Carbon;
 use DateInterval;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class adminController extends Controller
 {
     public function stat(){
+        $admin = session('admin');
         $intervenant = session('intervenant');
-        return view('statistique.statglobalmensuel',['intervenant' => $intervenant]);
+        return view('statistique.statglobalmensuel',['intervenant' => $intervenant,'admin' => $admin]);
     }
     public function statis(){
+        $admin = session('admin');
         $intervenant = session('intervenant');
-        return view('statistique.statglobalhebdo',['intervenant' => $intervenant]);
+        return view('statistique.statglobalhebdo',['intervenant' => $intervenant,'admin' => $admin]);
     }
     public function globalmensuel(Request $request){
         $month = (int)$request->month;
@@ -225,7 +228,9 @@ class adminController extends Controller
             return redirect('/stathebdo')->with('vide',"Aucune ticket dans cet Mois");
         }
         else{
+            $admin = session('admin');
             return view('statistique.statglobalmensuel', [
+                'admin' => $admin,
                 'nb_ticketOK' => $nb_ticketOK,
                 'nb_bloque' => $nb_bloque,
                 'nb_inaccessible' => $nb_inaccessible,
@@ -248,7 +253,19 @@ class adminController extends Controller
             ]);
         }
     }
-
+public function changemdp(){
+    $admin = session('admin');
+    return view('admin.login.changemdp',['admin'=>$admin]);
+}
+public function update_mdp($id,Request $request){
+    $admin = session('admin');
+    $id=$admin->first()->id;
+    $adminis=Admin::whereId($id)->first();
+    $adminis->mdp_admin=$request->mdp_a;
+    $adminis->save();
+    session(['admin' => $adminis]);
+    return back()->with('success',"Changement de mot de passe Admin réussit");
+}
     public function globalhebdo(Request $request){
         // Numéro de la semaine et année souhaitée
         $weekNumber = $request->num_semaine;
@@ -499,7 +516,9 @@ class adminController extends Controller
             return redirect('/statglobalhebdo')->with('vide',"Aucune ticket de cet Mois");
         }
         else{
+            $admin = session('admin');
             return view('statistique.statglobalhebdo', [
+                'admin' => $admin,
                 'nb_ticket' => $nb_ticketOK,
                 'nb_bloque' => $nb_bloque,
                 'nb_suivre' => $nb_suivre,
@@ -529,7 +548,8 @@ class adminController extends Controller
 
 }
 public function dash(){
-    return view('admin.layout.admin-dashboard');
+    $admin = session('admin');
+    return view('admin.layout.admin-dashboard',['admin'=>$admin]);
 }
 
 public function indexcreate(){
@@ -540,30 +560,50 @@ public function indexlogin(){
 }
 
 public function create(Request $request){
-    $admin=new Admin();
-    $nom=$request->nom_admin;
-    $email=$request->email_admin;
-    $mdp=$request->mdp2;
+    $nb_admin=Admin::count('id');
+    if(!$nb_admin){
+        $admin=new Admin();
+        $nom=$request->nom_admin;
+        $email=$request->email_admin;
+        $mdp=$request->mdp2;
 
-    $admin->nom_admin=$nom;
-    $admin->email_admin=$email;
-    $admin->mdp_admin=$mdp;
-    $admin->save();
-
-    return redirect('/create-admin')->with('successCreate',"Votre Compte Admin a été Céer avec Succès");
-}
-
-public function connex(Request $request){
-    $nom_admin=$request->nom_admin;
-    $mdp=$request->mdp_admin;
-    $admin =Admin::where('nom_admin',$nom_admin)
-                    ->where('mdp_admin',$mdp)->first();
-    if(!$admin){
-        return redirect('/login-admin')->with('incorrect',"Votre compte est incorrect");
+        $admin->nom_admin=$nom;
+        $admin->email_admin=$email;
+        $admin->mdp_admin=$mdp;
+        $admin->save();
+        return redirect('/create-admin')->with('successCreate',"Votre Compte Admin a été Céer avec Succès");
     }
     else{
-        return redirect('/principale-admin');
+        return redirect('/create-admin')->with('errorCreate',"Il existe déjà un compte Admin,On ne peut plus créer un deuxième compte pour assurer notre sécurité");
     }
+
+
+}
+
+public function connex(Request $request)
+{
+    $nom_admin = $request->nom_admin;
+    $mdp = $request->mdp_admin;
+
+    $admin = Admin::where('nom_admin', $nom_admin)
+                    ->where('mdp_admin', $mdp)->first();
+
+    if (!$admin) {
+        return redirect('/login-admin')->with('incorrect', "Votre compte est incorrect");
+    }
+
+    Auth::guard('admin')->login($admin);
+    session(['admin' => $admin]);
+    return redirect('/principale-admin');
+}
+
+public function deconnect(Request $request)
+{
+    Auth::guard('admin')->logout();
+
+    $request->session()->invalidate();
+
+    return redirect('/login-admin');
 }
 
 public function menu(){
@@ -588,12 +628,23 @@ public function menu(){
     $ticketInacces=Ticket::whereRaw('MONTH(tickets.created_at) = ?', [$currentMonth])
                         ->where('statut','LIKE','Inaccessible%')
                         ->count();
-    return view('admin.menu.principale-admin',['statistique'=>$statistique,'ticketOK'=>$ticketOK,'ticketBloq'=>$ticketBloq,'ticketSuivr'=>$ticketSuivr,'ticketInacces'=>$ticketInacces]);
+
+    $admin = session('admin');
+    return view('admin.menu.principale-admin',['statistique'=>$statistique,'ticketOK'=>$ticketOK,'ticketBloq'=>$ticketBloq,'ticketSuivr'=>$ticketSuivr,'ticketInacces'=>$ticketInacces,'admin'=>$admin]);
 }
 
+public function update_admin($id,Request $request){
+    $admin=Admin::whereId($id)->first();
+    $admin->nom_admin=$request->nom_a;
+    $admin->email_admin=$request->email_a;
+    $admin->save();
+    session(['admin' => $admin]);
+    return back()->with('successadminModif',"Modification de profil d'\Admin réussite");
+}
 public function hebdo(){
     $intervenant = Intervenant::all();
-    return view('admin.stat.hebdopers-admin',['intervenant' => $intervenant,]);
+    $admin = session('admin');
+    return view('admin.stat.hebdopers-admin',['intervenant' => $intervenant,'admin' => $admin]);
 }
 public function stathebdo(Request $request){
     $intervenant = Intervenant::all();
@@ -862,7 +913,9 @@ public function stathebdo(Request $request){
         return redirect('/stathebdo-admin')->with('vide',"Aucune ticket de cet Mois");
     }
     else{
+        $admin = session('admin');
         return view('admin.stat.hebdopers-admin', [
+            'admin' => $admin,
             'nb_prod' => $nb_prod,
             'delai_prod' => $delai_prodF,
             'pourcprod' => $pourcprod,
@@ -894,7 +947,8 @@ public function stathebdo(Request $request){
 }
 public function index(){
     $intervenant = Intervenant::all();
-    return view('admin.stat.mensuelpers-admin',['intervenant' => $intervenant,]);
+    $admin = session('admin');
+    return view('admin.stat.mensuelpers-admin',['intervenant' => $intervenant,'admin' => $admin]);
 }
 
 public function statmensuel(Request $request){
@@ -1128,7 +1182,9 @@ public function statmensuel(Request $request){
         return redirect('/statmensuel-admin')->with('vide',"Aucune ticket de cet Mois");
     }
     else{
+        $admin = session('admin');
         return view('admin.stat.mensuelpers-admin', [
+            'admin' => $admin,
             'nb_prod' => $nb_prod,
             'delai_prod' => $delai_prodF,
             'pourcprod' => $pourcprod,

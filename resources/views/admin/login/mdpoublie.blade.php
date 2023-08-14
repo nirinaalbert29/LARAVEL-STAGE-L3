@@ -18,14 +18,12 @@
 <link rel="stylesheet" href="./css/style.min.css">
 <style>
     body {
-        /* Utilisez la fonction d'aide asset pour obtenir le chemin complet de l'image */
-        background-image: url("{{ asset('iconlog.jpg') }}");
-        /* Réglez les autres propriétés CSS pour la mise en page selon vos besoins */
-        background-size: cover;
-        background-repeat: no-repeat;
-        /* Vous pouvez également définir la hauteur et la largeur de la section si nécessaire */
-        height: 100vh;
-    }
+            background: linear-gradient(100deg, #2e1322, #531f34, #bb2e72);
+        }
+        #divimg{
+            background: linear-gradient(100deg, #e84393,#413e58, #2e1322);
+            color: #f8f9fa;
+        }
 </style>
 </head>
 <body>
@@ -39,25 +37,34 @@
             </script>
         @endif
         <div class="layer"></div>
+
 <main class="page-center">
-  <article class="sign-up">
-    <h1 class="sign-up__title">Mot de passe oublié Admin</h1>
-    <form class="sign-up-form form" action="/mdpoublie-admin" method="POST">
-        @csrf
-        <div class="d-flex justify-content-center">
-            <img src="/logo_open.jpg" class="rounded-circle"
-                    alt="logo" srcset="" width="100">
+    <div class="row">
+        <div class="col-6">
+        <img src="/mdpoubl.svg" alt="" style="width: 100%">
         </div>
-        <div class="form-group">
-            <label for="password">Saisir Votre Email:</label>
-            <div class="input-group">
-                <input type="email" class="form-control form-input" placeholder="Saisir votre email..." name="mail" required>
-              </div>
+        <div class="col-6">
+            <article class="sign-up">
+                <form class="sign-up-form form" action="/mdpoublie-admin" method="POST" id="divimg">
+                    @csrf
+                    <div class="d-flex justify-content-center">
+                        <img src="/logo_open.jpg" class="rounded-circle"
+                                alt="logo" srcset="" width="100">
+                    </div>
+                    <h1 class="sign-up__title text-white my-5">Mot de passe oublié Admin</h1>
+
+                    <div class="form-group">
+                        <label for="password">Saisir Votre Email:</label>
+                        <div class="input-group">
+                            <input type="email" class="form-control form-input" placeholder="Saisir votre email..." name="mail" required>
+                        </div>
+                    </div>
+                <button class="form-btn primary-default-btn transparent-btn">Valider</button><br>
+                <a href="/login-admin"> <p> << Retour au Login.. </p></a>
+                </form>
+            </article>
         </div>
-      <button class="form-btn primary-default-btn transparent-btn">Valider</button><br>
-      <a href="/login-admin"> <p> << Retour au Login.. </p></a>
-    </form>
-  </article>
+    </div>
 </main>
 </body>
 </html>
